@@ -258,7 +258,7 @@ export default function ResultsPage() {
 
         {/* What's Included */}
         <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">📋 What's Included in Your Playbook</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">📋 What&apos;s Included in Your Playbook</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -266,7 +266,7 @@ export default function ResultsPage() {
                 <div className="text-green-500 text-xl">✅</div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Business Scenario Analysis</h4>
-                  <p className="text-gray-600 text-sm">Detailed analysis of your company's sustainability context</p>
+                  <p className="text-gray-600 text-sm">Detailed analysis of your company&apos;s sustainability context</p>
                 </div>
               </div>
               

@@ -47,13 +47,12 @@ export default function HomePage() {
 
     // Prepare data for backend - exclude company_name as backend doesn't expect it
     const backendData = {
+      company_name: formData.company_name,
       industry_focus: formData.industry_focus,
       regulatory_framework: formData.regulatory_framework,
       training_level: formData.training_level
     };
 
-    // Debug: Log the data being sent
-    console.log('Sending data to backend:', JSON.stringify(backendData, null, 2));
 
     try {
       const response = await fetch('http://localhost:8000/api/training/start', {

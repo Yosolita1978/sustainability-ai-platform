@@ -68,6 +68,12 @@ class Sustainability():
         if len(data.get('marketing_objectives', [])) < 3:
             print(f"❌ Scenario validation failed: Need at least 3 marketing objectives")
             return False
+        
+        # Validate company name matches user input (if provided)
+        if hasattr(self, 'expected_company_name') and self.expected_company_name:
+            if data.get('company_name', '').lower() != self.expected_company_name.lower():
+                print(f"❌ Scenario validation failed: Company name mismatch. Expected: {self.expected_company_name}, Got: {data.get('company_name')}")
+                return False
             
         return True
     
@@ -126,6 +132,10 @@ class Sustainability():
                 return False
         
         return True
+    
+    def set_expected_company_name(self, company_name: str):
+        """Set expected company name for validation"""
+        self.expected_company_name = company_name
     
     @agent
     def scenario_builder(self) -> Agent:

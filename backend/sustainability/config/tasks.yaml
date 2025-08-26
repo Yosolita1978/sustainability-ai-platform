@@ -1,72 +1,81 @@
 scenario_creation_task:
   description: >
-    Create a comprehensive and realistic business scenario for sustainability messaging training based on the user's
-    profile, industry focus, and regional regulatory context. Search extensively for current sustainability trends and 
-    real company examples in {user_industry} to make the scenario authentic and timely. 
+    Create a comprehensive and realistic business scenario for sustainability messaging training using the provided
+    company information and user's industry focus and regional regulatory context. The company name is {user_company_name}.
+    You MUST use this exact company name - do not change it or generate a different one. Search extensively for current 
+    sustainability trends and real company examples in {user_industry} to make the scenario authentic and timely for {user_company_name}. 
     
     YOU MUST OUTPUT YOUR RESPONSE AS VALID JSON with this exact structure:
     {{
-      "company_name": "specific company name",
+      "company_name": "{user_company_name}",
       "industry": "{user_industry}",
       "company_size": "specific size (e.g., 'Medium (200-300 employees)')",
-      "location": "specific city and country",
-      "product_service": "detailed description of products/services with sustainability implications",
-      "target_audience": "detailed demographics and psychographics", 
+      "location": "specific city and country based on research or reasonable assumption",
+      "product_service": "detailed description of products/services with sustainability implications for {user_company_name}",
+      "target_audience": "detailed demographics and psychographics for {user_company_name}", 
       "marketing_objectives": ["objective 1", "objective 2", "objective 3", "objective 4", "objective 5"],
-      "sustainability_context": "current sustainability challenges and context",
+      "sustainability_context": "current sustainability challenges and context for {user_company_name}",
       "preliminary_claims": ["claim 1", "claim 2", "claim 3", "claim 4"],
-      "regulatory_context": "detailed regulatory context for {regulatory_region}",
-      "competitive_landscape": "analysis of competitors and positioning",
+      "regulatory_context": "detailed regulatory context for {regulatory_region} applicable to {user_company_name}",
+      "competitive_landscape": "analysis of competitors and positioning for {user_company_name}",
       "current_practices": ["practice 1", "practice 2", "practice 3"],
       "challenges_faced": ["challenge 1", "challenge 2", "challenge 3"],
       "market_research_sources": ["source 1", "source 2", "source 3"]
     }}
     
-    CRITICAL: Output ONLY the JSON object, no additional text. Ensure all fields are populated with specific,
-    realistic content based on your research. Marketing objectives must have at least 5 items.
+    CRITICAL REQUIREMENTS:
+    - Use EXACTLY the company name provided: {user_company_name}
+    - Output ONLY the JSON object, no additional text
+    - Create realistic business context for this real company
+    - Marketing objectives must have at least 5 items
+    - Research the industry to make the scenario authentic for {user_company_name}
   expected_output: >
     A single JSON object containing complete business scenario data with all required fields populated.
-    Must include specific company details, at least 5 marketing objectives, 4 preliminary claims,
-    and comprehensive regulatory context for {regulatory_region}. No additional text outside the JSON.
+    Must use the exact company name "{user_company_name}" and include specific company details, at least 5 marketing 
+    objectives, 4 preliminary claims, and comprehensive regulatory context for {regulatory_region}. 
+    No additional text outside the JSON.
   agent: scenario_builder
 
 mistake_generation_task:
   description: >
-    Based on the business scenario created in the previous task, research real examples of problematic 
-    sustainability messages and greenwashing cases in {regulatory_region}. Create exactly 4 detailed 
-    problematic sustainability messages that are contextually relevant to the scenario company.
+    Based on the business scenario created for {user_company_name} in the previous task, research real examples of 
+    problematic sustainability messages and greenwashing cases in {regulatory_region}. Create exactly 4 detailed 
+    problematic sustainability messages that are contextually relevant to {user_company_name}.
     
     YOU MUST OUTPUT YOUR RESPONSE AS VALID JSON with this exact structure:
     {{
-      "scenario_reference": "brief reference to the company from previous task",
+      "scenario_reference": "{user_company_name} - {user_industry} industry",
       "problematic_messages": [
         {{
           "id": "msg1",
-          "message": "the problematic sustainability message text",
+          "message": "the problematic sustainability message text relevant to {user_company_name}",
           "problems_identified": ["problem 1", "problem 2", "problem 3"],
           "regulatory_violations": ["violation 1", "violation 2"],
           "greenwashing_patterns": ["pattern 1", "pattern 2"],
           "real_world_examples": ["example 1", "example 2"],
-          "why_problematic": "detailed explanation of why this message is problematic",
+          "why_problematic": "detailed explanation of why this message is problematic for {user_company_name}",
           "potential_consequences": ["consequence 1", "consequence 2"],
-          "context_specific_issues": "issues specific to the scenario company",
+          "context_specific_issues": "issues specific to {user_company_name}",
           "alternative_approaches": ["approach 1", "approach 2"]
         }},
         ... (repeat for msg2, msg3, msg4)
       ],
       "general_patterns_found": ["pattern 1", "pattern 2", "pattern 3"],
-      "regulatory_landscape": "overview of {regulatory_region} regulations",
+      "regulatory_landscape": "overview of {regulatory_region} regulations affecting {user_company_name}",
       "research_sources": ["source 1", "source 2", "source 3"],
-      "industry_specific_insights": "insights specific to {user_industry}",
+      "industry_specific_insights": "insights specific to {user_industry} affecting {user_company_name}",
       "enforcement_trends": ["trend 1", "trend 2", "trend 3"]
     }}
     
-    CRITICAL: Output ONLY the JSON object, no additional text. Must include exactly 4 problematic messages
-    (msg1, msg2, msg3, msg4) with all required fields populated for each message.
+    CRITICAL REQUIREMENTS:
+    - Reference {user_company_name} throughout the analysis
+    - Output ONLY the JSON object, no additional text
+    - Must include exactly 4 problematic messages (msg1, msg2, msg3, msg4)
+    - All examples should be relevant to {user_company_name}'s industry and context
   expected_output: >
     A single JSON object containing exactly 4 problematic sustainability messages with complete analysis
-    for each message including regulatory violations, real-world examples, and context-specific issues.
-    No additional text outside the JSON.
+    for each message including regulatory violations, real-world examples, and context-specific issues
+    relevant to {user_company_name}. No additional text outside the JSON.
   agent: mistake_illustrator
   context:
     - scenario_creation_task
@@ -74,20 +83,21 @@ mistake_generation_task:
 best_practice_transformation_task:
   description: >
     Transform each of the 4 problematic messages from the previous task into compliant, effective alternatives
-    by researching current best practices and successful sustainability communications in {regulatory_region}.
+    for {user_company_name} by researching current best practices and successful sustainability communications 
+    in {regulatory_region}.
     
     YOU MUST OUTPUT YOUR RESPONSE AS VALID JSON with this exact structure:
     {{
-      "scenario_reference": "brief reference to the company from scenario task",
+      "scenario_reference": "{user_company_name} - {user_industry} industry",
       "corrected_messages": [
         {{
           "original_message_id": "msg1",
-          "corrected_message": "the improved, compliant message text",
+          "corrected_message": "the improved, compliant message text for {user_company_name}",
           "changes_made": ["change 1", "change 2", "change 3"],
-          "compliance_notes": "how this message ensures regulatory compliance",
+          "compliance_notes": "how this message ensures regulatory compliance for {user_company_name}",
           "best_practices_applied": ["practice 1", "practice 2"],
           "real_world_examples": ["company example 1", "company example 2"],
-          "effectiveness_rationale": "why this corrected message is effective",
+          "effectiveness_rationale": "why this corrected message is effective for {user_company_name}",
           "evidence_required": ["evidence 1", "evidence 2"],
           "monitoring_suggestions": ["monitoring 1", "monitoring 2"]
         }},
@@ -96,15 +106,19 @@ best_practice_transformation_task:
       "general_guidelines": ["guideline 1", "guideline 2", "guideline 3"],
       "key_principles": ["principle 1", "principle 2", "principle 3"],
       "regulatory_compliance_tips": ["tip 1", "tip 2", "tip 3"],
-      "industry_specific_advice": "advice specific to {user_industry}",
+      "industry_specific_advice": "advice specific to {user_industry} for {user_company_name}",
       "research_sources": ["source 1", "source 2", "source 3"]
     }}
     
-    CRITICAL: Output ONLY the JSON object, no additional text. Must include exactly 4 corrected messages
-    corresponding to msg1, msg2, msg3, msg4 with all required fields populated.
+    CRITICAL REQUIREMENTS:
+    - All corrections must be tailored to {user_company_name}
+    - Output ONLY the JSON object, no additional text
+    - Must include exactly 4 corrected messages corresponding to msg1, msg2, msg3, msg4
+    - All guidance should be specific to {user_company_name}'s context
   expected_output: >
     A single JSON object containing exactly 4 corrected messages with detailed improvements, compliance
-    notes, and evidence requirements for each correction. No additional text outside the JSON.
+    notes, and evidence requirements for each correction tailored to {user_company_name}. 
+    No additional text outside the JSON.
   agent: best_practice_coach
   context:
     - scenario_creation_task
@@ -112,58 +126,63 @@ best_practice_transformation_task:
 
 implementation_task:
   description: >
-    Create a comprehensive implementation roadmap and success metrics framework based on all previous tasks.
-    Develop practical guidance that the scenario company can use to implement sustainable messaging practices.
+    Create a comprehensive implementation roadmap and success metrics framework based on all previous tasks
+    specifically for {user_company_name}. Develop practical guidance that {user_company_name} can use to 
+    implement sustainable messaging practices.
     
     YOU MUST OUTPUT YOUR RESPONSE AS VALID JSON with this exact structure:
     {{
-      "scenario_reference": "brief reference to the company from scenario task",
+      "scenario_reference": "{user_company_name} - {user_industry} industry",
       "implementation_roadmap": [
-        "step 1: detailed implementation step",
-        "step 2: detailed implementation step", 
-        "step 3: detailed implementation step",
-        "step 4: detailed implementation step",
-        "step 5: detailed implementation step",
-        "step 6: detailed implementation step"
+        "step 1: detailed implementation step for {user_company_name}",
+        "step 2: detailed implementation step for {user_company_name}", 
+        "step 3: detailed implementation step for {user_company_name}",
+        "step 4: detailed implementation step for {user_company_name}",
+        "step 5: detailed implementation step for {user_company_name}",
+        "step 6: detailed implementation step for {user_company_name}"
       ],
       "success_metrics": [
-        "metric 1: specific measurable outcome",
-        "metric 2: specific measurable outcome",
-        "metric 3: specific measurable outcome", 
-        "metric 4: specific measurable outcome",
-        "metric 5: specific measurable outcome"
+        "metric 1: specific measurable outcome for {user_company_name}",
+        "metric 2: specific measurable outcome for {user_company_name}",
+        "metric 3: specific measurable outcome for {user_company_name}", 
+        "metric 4: specific measurable outcome for {user_company_name}",
+        "metric 5: specific measurable outcome for {user_company_name}"
       ],
       "timeline_milestones": [
-        "month 1: milestone description",
-        "month 3: milestone description",
-        "month 6: milestone description",
-        "month 12: milestone description"
+        "month 1: milestone description for {user_company_name}",
+        "month 3: milestone description for {user_company_name}",
+        "month 6: milestone description for {user_company_name}",
+        "month 12: milestone description for {user_company_name}"
       ],
       "team_training_requirements": [
-        "training requirement 1",
-        "training requirement 2", 
-        "training requirement 3"
+        "training requirement 1 for {user_company_name}",
+        "training requirement 2 for {user_company_name}", 
+        "training requirement 3 for {user_company_name}"
       ],
       "tools_and_resources": [
-        "tool/resource 1",
-        "tool/resource 2",
-        "tool/resource 3"
+        "tool/resource 1 for {user_company_name}",
+        "tool/resource 2 for {user_company_name}",
+        "tool/resource 3 for {user_company_name}"
       ],
       "risk_mitigation": [
-        "risk 1 and mitigation strategy",
-        "risk 2 and mitigation strategy",
-        "risk 3 and mitigation strategy"
+        "risk 1 and mitigation strategy for {user_company_name}",
+        "risk 2 and mitigation strategy for {user_company_name}",
+        "risk 3 and mitigation strategy for {user_company_name}"
       ],
-      "industry_specific_considerations": "considerations specific to {user_industry}",
-      "regulatory_compliance_schedule": "schedule for ongoing compliance activities",
-      "budget_considerations": "estimated budget and resource requirements"
+      "industry_specific_considerations": "considerations specific to {user_industry} for {user_company_name}",
+      "regulatory_compliance_schedule": "schedule for ongoing compliance activities for {user_company_name}",
+      "budget_considerations": "estimated budget and resource requirements for {user_company_name}"
     }}
     
-    CRITICAL: Output ONLY the JSON object, no additional text. Must include at least 6 implementation
-    steps and 5 success metrics with specific, actionable content.
+    CRITICAL REQUIREMENTS:
+    - All guidance must be tailored specifically to {user_company_name}
+    - Output ONLY the JSON object, no additional text
+    - Must include at least 6 implementation steps and 5 success metrics
+    - All recommendations should be actionable for {user_company_name}
   expected_output: >
     A single JSON object containing comprehensive implementation guidance with at least 6 roadmap steps,
-    5 success metrics, timeline milestones, and practical considerations. No additional text outside the JSON.
+    5 success metrics, timeline milestones, and practical considerations all tailored specifically to 
+    {user_company_name}. No additional text outside the JSON.
   agent: playbook_creator
   context:
     - scenario_creation_task

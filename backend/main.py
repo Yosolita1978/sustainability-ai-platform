@@ -64,6 +64,7 @@ app.add_middleware(
 # ============================================================================
 
 class TrainingRequest(BaseModel):
+    company_name: str
     industry_focus: str
     regulatory_framework: str
     training_level: str
@@ -212,6 +213,7 @@ def run_clean_training_session(session_id: str, training_request: TrainingReques
         
         # Prepare inputs for CrewAI
         inputs = {
+            'user_company_name': training_request.company_name,
             'user_industry': training_request.industry_focus,
             'regulatory_region': training_request.regulatory_framework,
             'regional_regulations': regulatory_details['regulations'],
@@ -301,7 +303,7 @@ async def start_training(request: TrainingRequest, background_tasks: BackgroundT
     cleanup_old_sessions()
     
     # Validate request
-    if not request.industry_focus or not request.regulatory_framework:
+    if not request.company_name or not request.industry_focus or not request.regulatory_framework:
         raise HTTPException(status_code=400, detail="Missing required fields")
     
     # Create session
@@ -412,7 +414,7 @@ async def get_playbook_content(session_id: str):
         metadata = {
             "file_size": file_stat.st_size,
             "generated_at": session["completed_at"].isoformat() if session["completed_at"] else None,
-            "company_name": session["request"].get("industry_focus", "Unknown"),
+            "company_name": session["request"].get("company_name", "Unknown"),
             "regulatory_framework": session["request"].get("regulatory_framework", "Unknown"),
             "training_level": session["request"].get("training_level", "Unknown"),
             "content_length": len(playbook_content),
