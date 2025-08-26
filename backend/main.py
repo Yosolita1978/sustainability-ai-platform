@@ -82,6 +82,12 @@ class StatusResponse(BaseModel):
     completed_at: Optional[str] = None
     error: Optional[str] = None
 
+class PlaybookContentResponse(BaseModel):
+    session_id: str
+    status: str
+    content: str
+    metadata: Dict[str, Any]
+
 # ============================================================================
 # SESSION MANAGEMENT (SIMPLIFIED)
 # ============================================================================
@@ -373,6 +379,56 @@ async def download_playbook(session_id: str):
         filename=filename,
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
+@app.get("/api/training/playbook/{session_id}", response_model=PlaybookContentResponse)
+async def get_playbook_content(session_id: str):
+    """Get the playbook content as JSON"""
+    
+    # Validate session exists
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    session = sessions[session_id]
+    
+    # Check if training is completed
+    if session["status"] != "completed":
+        raise HTTPException(status_code=400, detail="Training not completed yet")
+    
+    # Check if playbook file exists
+    if not session["playbook_file"] or not os.path.exists(session["playbook_file"]):
+        raise HTTPException(status_code=404, detail="Playbook file not found")
+    
+    try:
+        # Read the playbook content
+        playbook_path = Path(session["playbook_file"])
+        
+        with open(playbook_path, 'r', encoding='utf-8') as f:
+            playbook_content = f.read()
+        
+        # Get file metadata
+        file_stat = playbook_path.stat()
+        
+        # Prepare metadata
+        metadata = {
+            "file_size": file_stat.st_size,
+            "generated_at": session["completed_at"].isoformat() if session["completed_at"] else None,
+            "company_name": session["request"].get("industry_focus", "Unknown"),
+            "regulatory_framework": session["request"].get("regulatory_framework", "Unknown"),
+            "training_level": session["request"].get("training_level", "Unknown"),
+            "content_length": len(playbook_content),
+            "line_count": playbook_content.count('\n')
+        }
+        
+        return PlaybookContentResponse(
+            session_id=session_id,
+            status="success",
+            content=playbook_content,
+            metadata=metadata
+        )
+    
+    except Exception as e:
+        print(f"Error reading playbook content for session {session_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Could not read playbook content")
 
 @app.get("/api/sessions")
 async def list_active_sessions():
