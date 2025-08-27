@@ -1,10 +1,9 @@
 // app/results/page.tsx
 'use client';
-export const dynamic = 'force-dynamic';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
+import MarkdownRenderer from '@/app/components/MarkdownRenderer';
 
 interface PlaybookMetadata {
     file_size: number;
@@ -23,7 +22,7 @@ interface PlaybookResponse {
     metadata: PlaybookMetadata;
 }
 
-export default function ResultsPage() {
+function ResultsPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('id');
@@ -330,16 +329,6 @@ export default function ResultsPage() {
                     </p>
                 </div>
 
-                {/* {playbookData && (
-                    <div className="bg-white rounded-lg shadow-xl p-8 mt-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">📖 Playbook Renderer Test</h2>
-                        <MarkdownRenderer
-                            content={playbookData.content}
-                            showTOC={true}
-                        />
-                    </div>
-                )} */}
-
                 {/* Action Buttons */}
                 <div className="bg-white rounded-lg shadow-xl p-8 text-center">
                     <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
@@ -372,5 +361,25 @@ export default function ResultsPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+function ResultsPageLoading() {
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Results...</h2>
+                <p className="text-gray-600">Preparing your training results</p>
+            </div>
+        </div>
+    );
+}
+
+export default function ResultsPage() {
+    return (
+        <Suspense fallback={<ResultsPageLoading />}>
+            <ResultsPageContent />
+        </Suspense>
     );
 }
