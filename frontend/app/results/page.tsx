@@ -41,7 +41,7 @@ export default function ResultsPage() {
 
         const fetchPlaybookData = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/training/playbook/${sessionId}`);
+                const response = await fetch(`https://sustainability-ai-platform.onrender.com/api/training/playbook/${sessionId}`);
 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch playbook data: ${response.status}`);
@@ -67,7 +67,7 @@ export default function ResultsPage() {
         setDownloading(true);
 
         try {
-            const response = await fetch(`http://localhost:8000/api/training/download/${sessionId}`);
+            const response = await fetch(`https://sustainability-ai-platform.onrender.com/api/training/download/${sessionId}`);
 
             if (!response.ok) {
                 throw new Error('Download failed');

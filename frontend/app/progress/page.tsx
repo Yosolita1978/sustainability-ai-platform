@@ -39,7 +39,7 @@ export default function ProgressPage() {
     // Polling function
     const pollStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/training/status/${sessionId}`);
+        const response = await fetch(`https://sustainability-ai-platform.onrender.com/api/training/status/${sessionId}`);
         
         if (!response.ok) {
           throw new Error(`Failed to fetch status: ${response.status}`);

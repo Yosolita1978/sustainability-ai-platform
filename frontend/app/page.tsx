@@ -55,7 +55,7 @@ export default function HomePage() {
 
 
     try {
-      const response = await fetch('http://localhost:8000/api/training/start', {
+      const response = await fetch('https://sustainability-ai-platform.onrender.com/api/training/start', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
