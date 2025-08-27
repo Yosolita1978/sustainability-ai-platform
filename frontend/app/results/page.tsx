@@ -3,7 +3,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import MarkdownRenderer from '@/app/components/MarkdownRenderer';
+
 
 interface PlaybookMetadata {
     file_size: number;
@@ -159,16 +159,16 @@ function ResultsPageContent() {
                     <div className="text-red-500 text-6xl mb-4">❌</div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Unable to Load Results</h2>
                     <p className="text-gray-600 mb-6">{error}</p>
-                    <div className="space-x-4">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <button
                             onClick={() => router.push(`/progress?id=${sessionId}`)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
                         >
                             Check Progress
                         </button>
                         <button
                             onClick={() => router.push('/')}
-                            className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
                         >
                             Start New Training
                         </button>
@@ -187,9 +187,9 @@ function ResultsPageContent() {
             <div className="max-w-4xl mx-auto">
 
                 {/* Success Header */}
-                <div className="bg-white rounded-lg shadow-xl p-8 mb-8 text-center">
+                <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-8 text-center">
                     <div className="text-6xl mb-4">🎉</div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                         Training Complete!
                     </h1>
                     <p className="text-gray-600 mb-6">
@@ -199,7 +199,7 @@ function ResultsPageContent() {
                     <button
                         onClick={handleDownload}
                         disabled={downloading}
-                        className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-200 text-lg"
+                        className="w-full sm:w-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-200 text-lg min-h-[44px]"
                     >
                         {downloading ? (
                             <>
@@ -215,14 +215,14 @@ function ResultsPageContent() {
                 </div>
 
                 {/* Playbook Details */}
-                <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">📊 Playbook Details</h2>
+                <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-8">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">📊 Playbook Details</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         <div className="bg-blue-50 rounded-lg p-4">
                             <div className="text-blue-600 text-2xl mb-2">🏢</div>
                             <h3 className="font-semibold text-blue-900 mb-1">Company</h3>
-                            <p className="text-blue-800">{playbookData.metadata.company_name}</p>
+                            <p className="text-blue-800 break-words">{playbookData.metadata.company_name}</p>
                         </div>
 
                         <div className="bg-green-50 rounded-lg p-4">
@@ -258,8 +258,8 @@ function ResultsPageContent() {
                 </div>
 
                 {/* What's Included */}
-                <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">📋 What&apos;s Included in Your Playbook</h2>
+                <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-8">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">📋 What&apos;s Included in Your Playbook</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
@@ -317,10 +317,10 @@ function ResultsPageContent() {
                 </div>
 
                 {/* Preview Section */}
-                <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">👀 Playbook Preview</h2>
+                <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-8">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">👀 Playbook Preview</h2>
                     <div className="bg-gray-50 rounded-lg p-4 overflow-hidden">
-                        <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed max-h-96 overflow-y-auto">
+                        <pre className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed max-h-96 overflow-y-auto break-words">
                             {getPreviewContent(playbookData.content)}
                         </pre>
                     </div>
@@ -330,11 +330,11 @@ function ResultsPageContent() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="bg-white rounded-lg shadow-xl p-8 text-center">
-                    <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
+                <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 text-center">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <button
                             onClick={() => router.push(`/playbook/${sessionId}`)}
-                            className="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-4 px-8 rounded-lg transition-colors duration-200 min-h-[44px]"
                         >
                             📖 View Playbook
                         </button>
@@ -342,14 +342,14 @@ function ResultsPageContent() {
                         <button
                             onClick={handleDownload}
                             disabled={downloading}
-                            className="w-full md:w-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-4 px-8 rounded-lg transition-colors duration-200 min-h-[44px]"
                         >
                             {downloading ? 'Downloading...' : '📥 Download Playbook'}
                         </button>
 
                         <button
                             onClick={() => router.push('/')}
-                            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-8 rounded-lg transition-colors duration-200 min-h-[44px]"
                         >
                             🚀 Generate New Training
                         </button>

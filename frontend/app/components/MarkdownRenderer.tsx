@@ -23,7 +23,7 @@ export default function MarkdownRenderer({
 }: MarkdownRendererProps) {
   const [toc, setTOC] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
-  const [isTOCCollapsed, setIsTOCCollapsed] = useState(false);
+  const [isTOCCollapsed, setIsTOCCollapsed] = useState(true); // Default collapsed for mobile
   const [copySuccess, setCopySuccess] = useState<string>('');
 
   // Helper function for generating anchor IDs (inlined to avoid import issues)
@@ -80,6 +80,10 @@ export default function MarkdownRenderer({
       element.scrollIntoView({ behavior: 'smooth' });
       // Update URL without triggering navigation
       window.history.pushState({}, '', `#${id}`);
+      // Auto-collapse TOC on mobile after selection
+      if (window.innerWidth < 1024) {
+        setIsTOCCollapsed(true);
+      }
     }
   };
 
@@ -99,12 +103,12 @@ export default function MarkdownRenderer({
         {children}
         <button
           onClick={() => copyLinkToClipboard(id)}
-          className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-blue-500 hover:text-blue-700"
+          className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-blue-500 hover:text-blue-700 p-2 -m-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label="Copy link to this section"
           title="Copy link"
         >
           {copySuccess === id ? (
-            <span className="text-green-500">✓</span>
+            <span className="text-green-500 text-lg">✓</span>
           ) : (
             <span className="text-lg">🔗</span>
           )}
@@ -127,12 +131,12 @@ export default function MarkdownRenderer({
   const getHeadingClasses = (level: number): string => {
     const baseClasses = "font-bold text-gray-900 mt-8 mb-4 first:mt-0";
     switch (level) {
-      case 1: return `${baseClasses} text-3xl md:text-4xl border-b-2 border-gray-200 pb-2`;
-      case 2: return `${baseClasses} text-2xl md:text-3xl`;
-      case 3: return `${baseClasses} text-xl md:text-2xl`;
-      case 4: return `${baseClasses} text-lg md:text-xl`;
-      case 5: return `${baseClasses} text-base md:text-lg`;
-      case 6: return `${baseClasses} text-sm md:text-base`;
+      case 1: return `${baseClasses} text-2xl md:text-3xl lg:text-4xl border-b-2 border-gray-200 pb-2`;
+      case 2: return `${baseClasses} text-xl md:text-2xl lg:text-3xl`;
+      case 3: return `${baseClasses} text-lg md:text-xl lg:text-2xl`;
+      case 4: return `${baseClasses} text-base md:text-lg lg:text-xl`;
+      case 5: return `${baseClasses} text-sm md:text-base lg:text-lg`;
+      case 6: return `${baseClasses} text-xs md:text-sm lg:text-base`;
       default: return baseClasses;
     }
   };
@@ -142,13 +146,13 @@ export default function MarkdownRenderer({
     <div className={`${level > 0 ? 'ml-4' : ''}`}>
       <button
         onClick={() => scrollToSection(item.id)}
-        className={`block w-full text-left py-1 px-2 rounded text-sm transition-colors duration-200 ${
+        className={`block w-full text-left py-3 px-4 rounded text-sm transition-colors duration-200 min-h-[44px] ${
           activeId === item.id
             ? 'bg-blue-100 text-blue-800 font-medium'
             : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
         }`}
       >
-        <span className="truncate block">{item.text}</span>
+        <span className="truncate block leading-relaxed">{item.text}</span>
       </button>
       {item.children && (
         <div className="mt-1">
@@ -179,7 +183,7 @@ export default function MarkdownRenderer({
           target: '_blank',
           rel: 'noopener noreferrer'
         })}
-        className="text-blue-600 hover:text-blue-800 underline"
+        className="text-blue-600 hover:text-blue-800 underline break-words"
       >
         {children}
       </a>
@@ -187,19 +191,21 @@ export default function MarkdownRenderer({
     
     // Custom paragraph styling
     p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-      <p {...props} className="text-gray-800 leading-relaxed mb-4">
+      <p {...props} className="text-gray-800 leading-relaxed mb-4 break-words">
         {children}
       </p>
     ),
     
-    // Custom code block styling
+    // Custom code block styling with mobile overflow handling
     pre: ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
-      <pre 
-        {...props} 
-        className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto text-sm"
-      >
-        {children}
-      </pre>
+      <div className="relative my-4">
+        <pre 
+          {...props} 
+          className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto text-sm leading-relaxed max-w-full"
+        >
+          {children}
+        </pre>
+      </div>
     ),
     
     // Custom inline code styling
@@ -211,16 +217,16 @@ export default function MarkdownRenderer({
       return (
         <code 
           {...props} 
-          className="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono"
+          className="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono break-words"
         >
           {children}
         </code>
       );
     },
     
-    // Custom table styling
+    // Custom table styling with mobile scroll
     table: ({ children, ...props }: React.TableHTMLAttributes<HTMLTableElement>) => (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto my-4 border border-gray-200 rounded-lg">
         <table {...props} className="min-w-full divide-y divide-gray-200">
           {children}
         </table>
@@ -242,7 +248,7 @@ export default function MarkdownRenderer({
     
     // Custom list item styling
     li: ({ children, ...props }: React.LiHTMLAttributes<HTMLLIElement>) => (
-      <li {...props} className="text-gray-800 leading-relaxed">
+      <li {...props} className="text-gray-800 leading-relaxed break-words">
         {children}
       </li>
     ),
@@ -251,7 +257,7 @@ export default function MarkdownRenderer({
     blockquote: ({ children, ...props }: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) => (
       <blockquote 
         {...props} 
-        className="border-l-4 border-blue-500 pl-4 py-2 my-4 bg-blue-50 italic text-gray-700"
+        className="border-l-4 border-blue-500 pl-4 py-2 my-4 bg-blue-50 italic text-gray-700 break-words"
       >
         {children}
       </blockquote>
@@ -266,62 +272,23 @@ export default function MarkdownRenderer({
   };
 
   return (
-    <div className={`flex gap-8 ${className}`}>
-      {/* Table of Contents Sidebar */}
+    <div className={`w-full ${className}`}>
+      {/* Mobile-First TOC */}
       {showTOC && toc.length > 0 && (
-        <div className="hidden lg:block w-64 flex-shrink-0">
-          <div className="sticky top-8">
-            <div className="bg-white rounded-lg shadow-lg border border-gray-200 max-h-[calc(100vh-6rem)] overflow-hidden">
-              {/* TOC Header */}
-              <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900">Table of Contents</h3>
-                <button
-                  onClick={() => setIsTOCCollapsed(!isTOCCollapsed)}
-                  className="text-gray-500 hover:text-gray-700"
-                  aria-label={isTOCCollapsed ? 'Expand TOC' : 'Collapse TOC'}
-                >
-                  {isTOCCollapsed ? '▶' : '▼'}
-                </button>
-              </div>
-              
-              {/* TOC Content */}
-              {!isTOCCollapsed && (
-                <div className="p-4 overflow-y-auto max-h-[600px]">
-                  <nav>
-                    {toc.map((item) => (
-                      <TOCItemComponent key={item.id} item={item} />
-                    ))}
-                  </nav>
-                </div>
-              )}
-            </div>
-            
-            {/* Back to Top Button */}
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="mt-4 w-full bg-blue-50 hover:bg-blue-100 text-blue-600 py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200"
-            >
-              ↑ Back to Top
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 min-w-0">
-        {/* Mobile TOC Toggle */}
-        {showTOC && toc.length > 0 && (
-          <div className="lg:hidden mb-6">
+        <div className="mb-6 lg:mb-8">
+          <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+            {/* TOC Header */}
             <button
               onClick={() => setIsTOCCollapsed(!isTOCCollapsed)}
-              className="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg px-4 py-3 text-left flex items-center justify-between"
+              className="w-full bg-gray-50 hover:bg-gray-100 border-b border-gray-200 px-4 py-3 text-left flex items-center justify-between min-h-[44px]"
             >
-              <span className="font-medium text-gray-900">Table of Contents</span>
-              <span className="text-gray-500">{isTOCCollapsed ? '▼' : '▲'}</span>
+              <h3 className="font-semibold text-gray-900">Table of Contents</h3>
+              <span className="text-gray-500 text-lg">{isTOCCollapsed ? '▼' : '▲'}</span>
             </button>
             
+            {/* TOC Content */}
             {!isTOCCollapsed && (
-              <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4">
+              <div className="p-4 max-h-[60vh] overflow-y-auto">
                 <nav>
                   {toc.map((item) => (
                     <TOCItemComponent key={item.id} item={item} />
@@ -330,10 +297,21 @@ export default function MarkdownRenderer({
               </div>
             )}
           </div>
-        )}
+          
+          {/* Back to Top Button */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="mt-4 w-full lg:w-auto bg-blue-50 hover:bg-blue-100 text-blue-600 py-3 px-4 rounded-lg text-sm font-medium transition-colors duration-200 min-h-[44px]"
+          >
+            ↑ Back to Top
+          </button>
+        </div>
+      )}
 
-        {/* Markdown Content */}
-        <div className="prose prose-lg prose-gray max-w-none">
+      {/* Main Content */}
+      <div className="w-full">
+        {/* Markdown Content with mobile-optimized prose */}
+        <div className="prose prose-sm md:prose-lg prose-gray max-w-none">
           <ReactMarkdown
             remarkPlugins={markdownPlugins.remarkPlugins}
             rehypePlugins={markdownPlugins.rehypePlugins}

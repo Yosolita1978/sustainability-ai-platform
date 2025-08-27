@@ -77,18 +77,18 @@ export default function PlaybookPage() {
             <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
                 <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl text-center">
                     <div className="text-red-500 text-6xl mb-4">❌</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Unable to Load Playbook</h2>
-                    <p className="text-gray-600 mb-6">{error}</p>
-                    <div className="space-x-4">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">Unable to Load Playbook</h2>
+                    <p className="text-gray-600 mb-6 break-words">{error}</p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <button
                             onClick={() => router.push(`/results?id=${sessionId}`)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 min-h-[44px]"
                         >
                             ← Back to Results
                         </button>
                         <button
                             onClick={() => router.push('/')}
-                            className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 min-h-[44px]"
                         >
                             Start New Training
                         </button>
@@ -108,7 +108,7 @@ export default function PlaybookPage() {
             <div className="max-w-4xl mx-auto mb-6">
                 <button
                     onClick={() => router.push(`/results?id=${sessionId}`)}
-                    className="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-lg shadow border border-gray-200 transition-colors duration-200 flex items-center space-x-2"
+                    className="w-full sm:w-auto bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg shadow border border-gray-200 transition-colors duration-200 flex items-center justify-center sm:justify-start space-x-2 min-h-[44px]"
                 >
                     <span>←</span>
                     <span>Back to Results</span>
@@ -116,7 +116,7 @@ export default function PlaybookPage() {
             </div>
 
             {/* Markdown Content */}
-            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl p-8">
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl p-4 md:p-8">
                 <MarkdownRenderer
                     content={playbookData.content}
                     showTOC={true}
