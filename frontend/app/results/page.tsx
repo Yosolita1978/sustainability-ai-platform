@@ -1,9 +1,10 @@
 // app/results/page.tsx
 'use client';
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import MarkdownRenderer from '@/app/components/MarkdownRenderer';
+
 
 interface PlaybookMetadata {
     file_size: number;
