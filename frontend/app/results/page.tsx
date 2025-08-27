@@ -325,11 +325,11 @@ export default function ResultsPage() {
                         </pre>
                     </div>
                     <p className="text-gray-500 text-sm mt-2 text-center">
-                        This is just a preview. Download the complete playbook for full content.
+                        This is just a preview. View the complete playbook for full interactive content.
                     </p>
                 </div>
 
-                {playbookData && (
+                {/* {playbookData && (
                     <div className="bg-white rounded-lg shadow-xl p-8 mt-8">
                         <h2 className="text-2xl font-bold text-gray-900 mb-6">📖 Playbook Renderer Test</h2>
                         <MarkdownRenderer
@@ -337,11 +337,18 @@ export default function ResultsPage() {
                             showTOC={true}
                         />
                     </div>
-                )}
+                )} */}
 
                 {/* Action Buttons */}
                 <div className="bg-white rounded-lg shadow-xl p-8 text-center">
                     <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
+                        <button
+                            onClick={() => router.push(`/playbook/${sessionId}`)}
+                            className="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
+                        >
+                            📖 View Playbook
+                        </button>
+
                         <button
                             onClick={handleDownload}
                             disabled={downloading}

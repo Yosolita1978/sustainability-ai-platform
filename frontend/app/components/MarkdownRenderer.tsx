@@ -185,6 +185,13 @@ export default function MarkdownRenderer({
       </a>
     ),
     
+    // Custom paragraph styling
+    p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+      <p {...props} className="text-gray-800 leading-relaxed mb-4">
+        {children}
+      </p>
+    ),
+    
     // Custom code block styling
     pre: ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
       <pre 
@@ -222,15 +229,22 @@ export default function MarkdownRenderer({
     
     // Custom list styling
     ul: ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-      <ul {...props} className="list-disc pl-6 space-y-1">
+      <ul {...props} className="list-disc pl-6 space-y-2 my-4">
         {children}
       </ul>
     ),
     
     ol: ({ children, ...props }: React.OlHTMLAttributes<HTMLOListElement>) => (
-      <ol {...props} className="list-decimal pl-6 space-y-1">
+      <ol {...props} className="list-decimal pl-6 space-y-2 my-4">
         {children}
       </ol>
+    ),
+    
+    // Custom list item styling
+    li: ({ children, ...props }: React.LiHTMLAttributes<HTMLLIElement>) => (
+      <li {...props} className="text-gray-800 leading-relaxed">
+        {children}
+      </li>
     ),
     
     // Custom blockquote styling
@@ -242,6 +256,13 @@ export default function MarkdownRenderer({
         {children}
       </blockquote>
     ),
+
+    // Custom strong/bold styling
+    strong: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+      <strong {...props} className="font-bold text-gray-900">
+        {children}
+      </strong>
+    ),
   };
 
   return (
@@ -250,7 +271,7 @@ export default function MarkdownRenderer({
       {showTOC && toc.length > 0 && (
         <div className="hidden lg:block w-64 flex-shrink-0">
           <div className="sticky top-8">
-            <div className="bg-white rounded-lg shadow-lg border border-gray-200 max-h-[calc(100vh-8rem)] overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg border border-gray-200 max-h-[calc(100vh-6rem)] overflow-hidden">
               {/* TOC Header */}
               <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                 <h3 className="font-semibold text-gray-900">Table of Contents</h3>
@@ -265,7 +286,7 @@ export default function MarkdownRenderer({
               
               {/* TOC Content */}
               {!isTOCCollapsed && (
-                <div className="p-4 overflow-y-auto max-h-96">
+                <div className="p-4 overflow-y-auto max-h-[600px]">
                   <nav>
                     {toc.map((item) => (
                       <TOCItemComponent key={item.id} item={item} />
